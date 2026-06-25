@@ -271,6 +271,17 @@ function render(d){
   buildPrograms(progs);
   buildActions(actions);
   buildBizContext(biz);
+
+  // 사업개발 탭 클릭 시 API 호출 (최초 1회)
+  let govLoaded = false;
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => {
+      if (t.textContent.includes('사업개발') && !govLoaded) {
+        govLoaded = true;
+        loadGovPrograms(d);
+      }
+    });
+  });
 }
 
 function buildCharts(f,m){
@@ -423,10 +434,12 @@ function buildBizContext(biz){
 
 function buildBizPrograms(){
   return`
+  <!-- 그로스브릿지 (구성 예시) -->
   <div class="pst">그로스브릿지 오픈 이노베이션 <span class="ptb tgb">혁신의숲 · 마크앤컴퍼니</span></div>
+  <div class="an" style="margin-bottom:12px"><strong>구성 예시</strong> — 그로스브릿지 API가 연동되면 현재 모집 중인 공고가 자동으로 표시됩니다. 아래는 피트 이력 기반 추천 예시입니다.</div>
   ${[
-    {n:1,name:'2026 함께하는 성장 WITH 삼성화재',org:'삼성화재·탭엔젤파트너스',reason:'금융사 PoC 레퍼런스 확보. AI/SaaS 솔루션 적용 가능.',supp:{type:'PoC 연계',money:'최대 5,000만원',period:'3~6개월'},tags:['금융 PoC','엔터프라이즈'],link:'https://www.innoforest.co.kr/growth-bridge'},
-    {n:2,name:'2026 KDB NextONE 12기',org:'한국산업은행',reason:'산업은행 정책금융 연계. 금융권 네트워크 확보.',supp:{type:'PoC + 액셀러레이팅',money:'최대 1,000만원',period:'6개월'},tags:['산업은행','정책금융'],link:'https://www.innoforest.co.kr/growth-bridge'},
+    {n:1,name:'2026 함께하는 성장 WITH 삼성화재',org:'삼성화재·탭엔젤파트너스',reason:'금융사 PoC 레퍼런스 확보. AI/SaaS 솔루션 적용 가능성 높음.',supp:{type:'PoC 연계',money:'최대 5,000만원',period:'3~6개월'},tags:['금융 PoC','엔터프라이즈'],link:'https://www.innoforest.co.kr/growth-bridge'},
+    {n:2,name:'2026 KDB NextONE 12기',org:'한국산업은행',reason:'산업은행 정책금융 연계. 금융권 네트워크 및 후속 투자 검토.',supp:{type:'PoC + 액셀러레이팅',money:'최대 1,000만원',period:'6개월'},tags:['산업은행','정책금융'],link:'https://www.innoforest.co.kr/growth-bridge'},
     {n:3,name:'2026 KB스타터스',org:'KB금융그룹',reason:'글로벌 트랙 포함. KB 계열사 PoC 및 투자 검토 연계.',supp:{type:'PoC + 글로벌',money:'최대 3,000만원',period:'6개월'},tags:['KB금융','글로벌 트랙'],link:'https://www.innoforest.co.kr/growth-bridge'},
   ].map(p=>`
   <div class="pc"><div class="pct"><div class="ppri">${p.n}</div><div class="pcb">
@@ -436,36 +449,98 @@ function buildBizPrograms(){
       <div class="supp-item"><div class="supp-label">지원금</div><div class="supp-val money">${p.supp.money}</div></div>
       <div class="supp-item"><div class="supp-label">기간</div><div class="supp-val">${p.supp.period}</div></div>
     </div>
-    <div class="prb"><div class="wl">매칭 근거</div>${p.reason}</div>
+    <div class="prb"><div class="wl">매칭 근거 (예시)</div>${p.reason}</div>
     <div class="ptags">${p.tags.map(t=>`<span class="ptag">${t}</span>`).join('')}</div>
-    <a class="plink" href="${p.link}" target="_blank">↗ 공고 확인</a>
+    <a class="plink" href="${p.link}" target="_blank">↗ 그로스브릿지 공고 확인</a>
   </div></div></div>`).join('')}
+
   <div class="dv"></div>
-  <div class="pst">정부 지원사업 연계 <span class="ptb tgg">bizinfo · 중소벤처24</span></div>
-  ${[
-    {pri:'P1',name:'2026년 TIPS 비R&D 연계사업',org:'중소벤처기업부 / TIPS 운영사',reason:'TIPS 협약 완료 기업 대상 사업화 자금 지원. 즉시 신청 자격 확인 필요.',supp:{money:'최대 1.5억원',ratio:'정부 70% / 자부담 30%',period:'10개월'},detail:['제품·서비스 초기 검증 비용','고객 반응 조사·기능 검증'],tags:['TIPS 연계','AI R&D','사업화'],open:true,deadline:'상시 접수',link:'https://www.bizinfo.go.kr'},
-    {pri:'P1',name:'2026 청년일자리도약장려금',org:'고용노동부 / 고용24',reason:'청년 정규직 채용 시 1인당 최대 720만원 지원. 채용 후 3개월 이내 신청.',supp:{money:'1인당 최대 720만원',ratio:'월 60만원 × 12개월',period:'12개월'},detail:['만 15~34세 취업애로청년 대상','채용 후 3개월 이내 신청 필수'],tags:['채용 지원','청년 고용','인건비 절감'],open:true,deadline:'~2026.12.31',link:'https://www.work24.go.kr'},
-    {pri:'P2',name:'KOTRA 수출지원기반활용사업',org:'KOTRA / 산업통상자원부',reason:'해외진출 계획 기업 대상 수출 바우처. 하반기 2차 공고 준비 필요.',supp:{money:'바우처 1억~2억원',ratio:'서비스 바우처 발급',period:'연간'},detail:['홍보·광고 / 전시회 참가비','통번역 / 해외규격인증'],tags:['해외진출','바우처','KOTRA'],open:false,deadline:'상반기 마감 → 하반기 준비',link:'https://www.bizinfo.go.kr'},
-    {pri:'P3',name:'IP 바우처 — PCT 해외 출원',org:'특허청 / 한국발명진흥회',reason:'PCT 특허 출원 비용의 최대 70% 지원. 상시 신청 가능.',supp:{money:'출원비 최대 70%',ratio:'IP 바우처 발급',period:'상시'},detail:['PCT 국제 출원 비용 지원','해외 특허 번역·현지 대리인 포함'],tags:['PCT 특허','IP 보호','해외 출원'],open:true,deadline:'상시 접수',link:'https://www.bizinfo.go.kr'},
-  ].map(p=>`
-  <div class="pc"><div class="pct"><div class="ppri" style="${p.pri==='P1'?'background:#1a1814;color:#fff':p.pri==='P2'?'background:#4a4540;color:#fff':'background:#d0ccc4;color:#4a4540'}">${p.pri}</div><div class="pcb">
-    <div class="pcn">${p.name}</div><div class="pco">${p.org}</div>
-    <div class="supp-box">
-      <div class="supp-item"><div class="supp-label">지원 규모</div><div class="supp-val money">${p.supp.money}</div></div>
-      <div class="supp-item"><div class="supp-label">지원 방식</div><div class="supp-val">${p.supp.ratio}</div></div>
-      <div class="supp-item"><div class="supp-label">기간</div><div class="supp-val">${p.supp.period}</div></div>
-    </div>
-    <div class="prb"><div class="wl">추천 사유</div>${p.reason}</div>
-    <ul class="supp-detail">${p.detail.map(d=>`<li>${d}</li>`).join('')}</ul>
-    <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap">
-      <div class="ptags">${p.tags.map(t=>`<span class="ptag">${t}</span>`).join('')}</div>
-      ${p.open?`<span class="govst-open">● 접수 중</span>`:`<span class="govst-closed">○ 모집 마감</span>`}
-      <span style="font-size:11px;color:#9a9188">${p.deadline}</span>
-    </div>
-    ${!p.open?`<div class="gov-prep">📋 ${p.deadline}</div>`:''}
-    <a class="plink" href="${p.link}" target="_blank" style="display:inline-block;margin-top:5px">↗ 기업마당 공고 확인</a>
-  </div></div></div>`).join('')}
-  <div class="an"><strong>API 연동 안내</strong> — 그로스브릿지 API 연동 완료 시 지원 가능 여부 자동 표시. bizinfo API 연동 시 접수 상태 실시간 업데이트.</div>`;
+
+  <!-- 정부지원사업 (bizinfo API 연동) -->
+  <div class="pst">정부 지원사업 연계 <span class="ptb tgg" id="govApiStatus">bizinfo API</span></div>
+  <div id="govLoading" style="text-align:center;padding:1.5rem;color:#9a9188;font-size:13px">
+    <div style="display:inline-block;width:20px;height:20px;border-radius:50%;border:2px solid #d0ccc4;border-top-color:#2d5a3d;animation:spin .8s linear infinite;margin-right:8px;vertical-align:middle"></div>
+    정부지원사업 공고를 불러오는 중...
+  </div>
+  <div id="govList"></div>
+  <div class="an" id="govNote" style="display:none"></div>`;
+}
+
+async function loadGovPrograms(d) {
+  const govLoading = document.getElementById('govLoading');
+  const govList = document.getElementById('govList');
+  const govNote = document.getElementById('govNote');
+  const govStatus = document.getElementById('govApiStatus');
+
+  try {
+    const keywords = (d.company_industries || []).concat(
+      (d.biz_context?.targets || []).filter(t => /해외|일본|싱가포르/.test(t)).map(() => '해외진출')
+    ).slice(0, 3);
+
+    const res = await fetch('/api/gov-programs', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        biz_context: d.biz_context,
+        company_industries: d.company_industries,
+        mpes: d.mpes,
+        keywords,
+      }),
+    });
+    const data = await res.json();
+
+    govLoading.style.display = 'none';
+
+    if (data.api_connected) {
+      govStatus.textContent = `bizinfo API 연동 · ${data.from_api || 0}건 실시간`;
+      govStatus.style.background = '#EAF3DE';
+      govStatus.style.color = '#3B6D11';
+    } else {
+      govStatus.textContent = 'bizinfo API 미연동 · 추천 목록';
+    }
+
+    const programs = data.programs || [];
+    govList.innerHTML = programs.map(p => {
+      const priStyle = p.priority==='P1'?'background:#1a1814;color:#fff':p.priority==='P2'?'background:#4a4540;color:#fff':'background:#d0ccc4;color:#4a4540';
+      const isOpen = p.status === 'open';
+      const statusEl = isOpen
+        ? `<span class="govst-open">● 접수 중</span>`
+        : p.status === 'closed'
+        ? `<span class="govst-closed">○ 모집 마감</span>`
+        : `<span style="font-size:11px;color:#9a9188;padding:3px 9px">? 확인 필요</span>`;
+      const detail = (p.detail || []).filter(Boolean);
+      return `<div class="pc"><div class="pct">
+        <div class="ppri" style="${priStyle}">${p.priority||'P2'}</div>
+        <div class="pcb">
+          <div class="pcn">${p.name}</div>
+          <div class="pco">${p.org||''}</div>
+          <div class="supp-box">
+            <div class="supp-item"><div class="supp-label">지원 규모</div><div class="supp-val money">${p.amount||'-'}</div></div>
+            <div class="supp-item"><div class="supp-label">지원 방식</div><div class="supp-val">${p.ratio||'-'}</div></div>
+            <div class="supp-item"><div class="supp-label">기간</div><div class="supp-val">${p.period||'-'}</div></div>
+          </div>
+          ${detail.length?`<ul class="supp-detail">${detail.map(d2=>`<li>${d2}</li>`).join('')}</ul>`:''}
+          <div style="display:flex;align-items:center;gap:8px;margin-top:6px;flex-wrap:wrap">
+            <div class="ptags">${(p.tags||[]).map(t=>`<span class="ptag">${t}</span>`).join('')}</div>
+            ${statusEl}
+            <span style="font-size:11px;color:#9a9188">${p.deadline||''}</span>
+          </div>
+          ${!isOpen && p.status==='closed'?`<div class="gov-prep">📋 ${p.deadline}</div>`:''}
+          <a class="plink" href="${p.link||'https://www.bizinfo.go.kr'}" target="_blank" style="display:inline-block;margin-top:5px">↗ 기업마당 공고 확인</a>
+        </div>
+      </div></div>`;
+    }).join('');
+
+    govNote.style.display = 'block';
+    govNote.innerHTML = data.api_connected
+      ? `<strong>bizinfo API 연동 완료</strong> — 현재 모집 중인 공고를 실시간으로 불러왔습니다. (총 ${data.total}건 중 ${data.from_api}건 API 실시간)`
+      : `<strong>bizinfo API 키 미설정</strong> — Vercel 환경변수에 <code>BIZINFO_API_KEY</code>를 추가하면 실시간 공고를 불러올 수 있습니다. 현재는 기업 맥락 기반 추천 목록을 표시합니다. <a href="https://www.bizinfo.go.kr/apiDetail.do?id=bizinfoApi" target="_blank" style="color:#185FA5">API 키 발급 →</a>`;
+
+  } catch(err) {
+    govLoading.innerHTML = `<span style="color:#9a9188">공고 불러오기 실패 — 잠시 후 다시 시도해주세요.</span>`;
+    console.error(err);
+  }
+}
 }
 
 function showTab(id,btn){

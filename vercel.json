@@ -12,6 +12,7 @@
     { "src": "/", "dest": "/public/index.html" }
   ],
   "env": {
-    "ANTHROPIC_API_KEY": "@anthropic_api_key"
+    "ANTHROPIC_API_KEY": "@anthropic_api_key",
+    "BIZINFO_API_KEY": "@bizinfo_api_key"
   }
 }
