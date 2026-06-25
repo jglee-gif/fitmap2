@@ -1,0 +1,14 @@
+{
+  "name": "fitmap",
+  "version": "1.0.0",
+  "description": "Fit Map - 포트폴리오 진단 시스템",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'static build'"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.40.0",
+    "xlsx": "^0.18.5"
+  }
+}
