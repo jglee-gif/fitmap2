@@ -1,18 +1,11 @@
 {
   "version": 2,
   "functions": {
-    "api/*.js": {
-      "maxDuration": 60
-    }
+    "api/*.js": { "maxDuration": 60 }
   },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/static/(.*)", "dest": "/public/static/$1" },
     { "src": "/report", "dest": "/public/report.html" },
-    { "src": "/", "dest": "/public/index.html" }
-  ],
-  "env": {
-    "ANTHROPIC_API_KEY": "@anthropic_api_key",
-    "BIZINFO_API_KEY": "@bizinfo_api_key"
-  }
+    { "src": "/(.*)", "dest": "/public/$1" }
+  ]
 }
