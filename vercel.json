@@ -1,13 +1,11 @@
 {
   "version": 2,
   "functions": {
-    "api/*.js": {
-      "maxDuration": 60
-    }
+    "api/*.js": { "maxDuration": 60 }
   },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1" },
-    { "src": "/report", "dest": "/public/report.html" },
-    { "src": "/(.*)", "dest": "/public/$1" }
+    { "src": "/report", "dest": "/report.html" },
+    { "src": "/", "dest": "/index.html" }
   ]
 }
